@@ -1,0 +1,22 @@
+{
+    "python.pythonPath": "/usr/local/bin/python3",
+    "prettier.eslintIntegration": true,
+    "window.zoomLevel": 0,
+    "prettier.semi": false,
+    "prettier.tslintIntegration": true,
+    "prettier.stylelintIntegration": true,
+    "eslint.run": "onSave",
+    "files.autoSaveDelay": 100,
+    "eslint.autoFixOnSave": true,
+    "workbench.activityBar.visible": true,
+    "search.globalFindClipboard": true,
+    "editor.renderControlCharacters": true,
+    "breadcrumbs.enabled": true,
+    "editor.renderWhitespace": "all",
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.statusBar.visible": false,
+    "python.jediEnabled": true,
+    "python.linting.lintOnSave": false,
+    "python.workspaceSymbols.rebuildOnFileSave": false,
+    "python.unitTest.autoTestDiscoverOnSaveEnabled": false
+}
