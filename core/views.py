@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Item
-from django.views.generic import ListView, DeleteView
+from django.views.generic import ListView, DetailView
 def products(request):
     context = {
         'items': Item.objects.all()
@@ -19,3 +19,8 @@ def item_list(request):
 class HomeView(ListView):
     model = Item
     template_name = "home-page.html"
+    context_object_name = "list_items"
+
+class ItemDetailView(DetailView):
+    model = Item
+    template_name = 'product-page.html'

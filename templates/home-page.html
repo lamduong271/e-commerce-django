@@ -74,15 +74,11 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">About MDB</a>
+            <a class="nav-link waves-effect" href="{% url 'core:product' %}" target="_blank">Products</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
-              target="_blank">Free download</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/education/bootstrap/" target="_blank">Free
-              tutorials</a>
+            <a class="nav-link waves-effect" href="{% url 'core:checkout' %}"
+              target="_blank">Checkout</a>
           </li>
         </ul>
 
@@ -317,7 +313,7 @@
         <!--Grid row-->
         <div class="row wow fadeIn">
 
-          {% for item in items %}
+          {% for item in list_items %}
           <div class="col-lg-3 col-md-6 mb-4">
 
             <!--Card-->
@@ -341,7 +337,7 @@
                 </a>
                 <h5>
                   <strong>
-                    <a href="" class="dark-grey-text">Denim shirt
+                    <a href="" class="dark-grey-text">{{ item.title }}
                       <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
                     </a>
                   </strong>
