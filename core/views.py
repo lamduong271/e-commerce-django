@@ -21,6 +21,7 @@ def item_list(request):
 class HomeView(ListView):
     model = Item
     template_name = "home-page.html"
+    paginate_by=1
     context_object_name = "list_items"
 
 class ItemDetailView(DetailView):
