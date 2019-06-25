@@ -41,12 +41,12 @@
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link waves-effect" href="#">Home
+              <a class="nav-link waves-effect" href="{% url 'core:item_list' %}">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link waves-effect" href="{% url 'core:product' %}" target="_blank">Products</a>
+              <a class="nav-link waves-effect" href="" target="_blank">Products</a>
             </li>
             <li class="nav-item">
               <a class="nav-link waves-effect" href="{% url 'core:checkout' %}"
@@ -86,11 +86,18 @@
     </div>
   </nav>
   <!-- Navbar -->
+ 
 
   <!--Main layout-->
   <main class="mt-5 pt-4">
     <div class="container dark-grey-text mt-5">
-
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <span{% if message.tags %} class="{{ message.tags }}"{% endif %}><div class="alert alert-primary" role="alert">{{ message }}</div></span>
+            {% endfor %}
+        </ul>
+        {% endif %}
       <!--Grid row-->
       <div class="row wow fadeIn">
 
@@ -115,10 +122,18 @@
             </div>
 
             <p class="lead">
-              <span class="mr-1">
-                <del>$200</del>
+              
+              <span> {% if item.discount_price %}
+                <span class="mr-1">
+                <del>
+                    $ {{ item.price }} 
+                </del>
+                <span> $ {{ item.discount_price }} </span>
               </span>
-              <span>${{ object.get_price}}</span>
+                  {% else %}
+                  {{ item.price }} $
+                  {% endif %}
+              </span>
             </p>
 
             <p class="lead font-weight-bold">Description</p>
@@ -130,9 +145,12 @@
             <form class="d-flex justify-content-left">
               <!-- Default input -->
               <input type="number" value="1" aria-label="Search" class="form-control" style="width: 100px">
-              <button class="btn btn-primary btn-md my-0 p" type="submit">Add to cart
+              <a href="{{ item.get_add_to_cart_url }}" class="btn btn-primary btn-md my-0 p" >Add to cart
                 <i class="fas fa-shopping-cart ml-1"></i>
-              </button>
+              </a>
+              <a href="{{ item.get_remove_from_cart_url }}" class="btn btn-danger btn-md my-0 p" >Remove from cart
+                  <i class="fas fa-shopping-cart ml-1"></i>
+                </a>
 
             </form>
 

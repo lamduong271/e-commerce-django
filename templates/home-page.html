@@ -69,12 +69,12 @@
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link waves-effect" href="#">Home
+            <a class="nav-link waves-effect" href="{% url 'core:item_list' %}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link waves-effect" href="{% url 'core:product' %}" target="_blank">Products</a>
+            <a class="nav-link waves-effect" href="" target="_blank">Products</a>
           </li>
           <li class="nav-item">
             <a class="nav-link waves-effect" href="{% url 'core:checkout' %}"
@@ -337,14 +337,20 @@
                 </a>
                 <h5>
                   <strong>
-                    <a href="" class="dark-grey-text">{{ item.title }}
+                    <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}
                       <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
                     </a>
                   </strong>
                 </h5>
 
                 <h4 class="font-weight-bold blue-text">
-                  <strong>{{ item.price }} $</strong>
+                  <strong>
+                    {% if item.discount_price %}
+                    {{ item.discount_price }} 
+                    {% else %}
+                    {{ item.price }} $
+                    {% endif %}
+                  </strong>
                 </h4>
 
               </div>
