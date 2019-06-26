@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Item, OrderItem, Order
-from django.views.generic import ListView, DetailView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 def products(request):
     context = {
@@ -24,10 +27,24 @@ class HomeView(ListView):
     paginate_by=1
     context_object_name = "list_items"
 
+class OrderSumary(LoginRequiredMixin, View):
+    def get(self,*args,**kwargs):
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            context={
+                'order':order
+            }
+            return render(self.request, 'order-sumary.html', context)
+        except ObjectDoesNotExist:
+            messages.error(self.request,"you dont have an order ")
+            return redirect('/')
+
+
 class ItemDetailView(DetailView):
     model = Item
     template_name = 'product-page.html'
 
+@login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item,slug=slug) #get item in Item that has slug = slug
     order_item, created = OrderItem.objects.get_or_create(
@@ -53,6 +70,7 @@ def add_to_cart(request, slug):
         messages.info(request,"item has been added to your cart")
     return redirect("core:product",slug=slug)
 
+@login_required
 def remove_from_cart(request,slug):
     item = get_object_or_404(Item,slug=slug)
     # item here is a field in OrderItem model
