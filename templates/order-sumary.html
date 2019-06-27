@@ -5,6 +5,7 @@
 <table class="table table-striped">
     <thead>
       <tr>
+        <th scope="col">#</th>
         <th scope="col">Title</th>
         <th scope="col">Price</th>
         <th scope="col">Quantity</th>
@@ -14,6 +15,7 @@
     <tbody>
         {% for item in order.items.all %}
         <tr>
+            <th>{{ forloop.counter }}</th>
             <th>{{ item.item.title }}</th>
             <td>
                 {% if item.item.discount_price %}
@@ -27,12 +29,41 @@
             <td>
                 {% if item.item.discount_price %}
                     {{ item.get_total_discount_item_price }}
+                    (Saving : {{ item.get_amount_saved }})
+
                 {% else %}
                     {{ item.get_total_item_price }}
                 {% endif %}
             </td>
         </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">You cart is empty</td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <a class="btn btn-primary float-right" href="/">
+                Continue shopping
+                </a>
+            </td>
+        </tr>
         {% endfor %}
+        {% if order.get_total %}
+        <tr>
+            <td colspan="4">Order total</td>
+            <td>{{ order.get_total }}</td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <a class="btn btn-warning float-right ml-2" href="/checkout">
+                    Proceed to checkout
+                </a>
+                <a class="btn btn-primary float-right" href="/">
+                    Continue shopping
+                </a>
+            </td>
+        </tr>
+        {% endif%}
     </tbody>
   </table>
 </div>
