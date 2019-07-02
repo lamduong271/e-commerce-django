@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.shortcuts import reverse
 from datetime import date
+from django_countries.fields import CountryField
 
 # Create your models here.
 CATEGORY_CHOICE = (
@@ -64,6 +65,7 @@ class Order(models.Model):
     ordered = models.BooleanField(default=False)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField(default=date.today)
+    billing_address = models.ForeignKey('BillingAdress', on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return self.user.username
     def get_total(self):
@@ -72,5 +74,13 @@ class Order(models.Model):
             total += order_item.get_final_price()
         return total
 
+class BillingAdress(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    stress_address = models.CharField(max_length=100)
+    apartment_address = models.CharField(max_length=100)
+    country = CountryField(multiple=False)
+    zip = models.CharField(max_length=100)
+    def __str__(self):
+        return self.user.username
 
 

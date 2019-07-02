@@ -25,7 +25,11 @@
                 {% endif %}
                 
             </td>
-            <td>{{ item.quantity }}</td>
+            <td>
+                <a href="{% url 'core:add_to_cart' item.item.slug %}"><i class="fas fa-plus"></i></a>
+                {{ item.quantity }}
+                <a href="{% url 'core:remove_single_item_from_cart' item.item.slug %}"><i class="fas fa-minus"></i></a>
+            </td>
             <td>
                 {% if item.item.discount_price %}
                     {{ item.get_total_discount_item_price }}
@@ -34,6 +38,7 @@
                 {% else %}
                     {{ item.get_total_item_price }}
                 {% endif %}
+                <a href="{% url 'core:remove_from_cart' item.item.slug %}"><i class="fas fa-trash float-right"></i></a>
             </td>
         </tr>
         {% empty %}
