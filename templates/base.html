@@ -7,7 +7,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Material Design Bootstrap</title>
+  <title>Shopping cart</title>
+  {% block extra_head %}
+  {% endblock extra_head %}
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -126,7 +128,7 @@
             </section>
         </main>
 {% block content  %}
-{% endblock content %}
+{% endblock %}
 
   <!--Footer-->
   <footer class="page-footer text-center font-small mt-4 wow fadeIn">
@@ -173,8 +175,10 @@
     {% endblock %}
 
 
+
   </footer>
   <!--/.Footer-->
+
 
   <!-- SCRIPTS -->
   <!-- JQuery -->
@@ -191,6 +195,8 @@
     new WOW().init();
 
   </script>
+  {% block extra_scripts %}
+  {% endblock extra_scripts %}
 </body>
 
 </html>

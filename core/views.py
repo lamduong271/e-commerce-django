@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Item, OrderItem, Order, BillingAdress
+from .models import Item, OrderItem, Order, BillingAdress, Payment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from .forms import CheckoutForm
+from django.conf import settings
+import stripe
+stripe.api_key = settings.STRIPE_KEY
+
 def products(request):
     context = {
         'items': Item.objects.all()
@@ -47,6 +51,64 @@ class CheckoutView(View):
             return redirect('core:checkout')
         except ObjectDoesNotExist:
             messages.error(self.request,"you dont have an order ")
+            return redirect('/')
+
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        return render(self.request,'payment.html')
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        token = self.request.POST.get('stripeToken')
+        amount = order.get_total() * 100
+        try:
+            charge = stripe.Charge.create(
+            amount = amount,
+            currency = "usd",
+            source = token, # obtained with Stripe.js
+            )
+            order.ordered=True
+            #create the payment
+            payment = Payment()
+            payment.stripe_charge_id = charge['id']
+            payment.user = self.request.user
+            payment.amount = amount
+            payment.save()
+            # assign payment to order
+            order.ordered = True
+            order.payment = payment
+            order.save()
+            messages.success(self.request, "Your order was successful")
+            return redirect('/')
+        except stripe.error.CardError as e:
+            # Since it's a decline, stripe.error.CardError will be caught
+            body = e.json_body
+            err  = body.get('error', {})
+            messages.error(self.request, f"{err.get('message')}")
+            return redirect('/')
+        except stripe.error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            messages.error(self.request, "Rate limit error")
+            return redirect('/')
+        except stripe.error.InvalidRequestError as e:
+            # Invalid parameters were supplied to Stripe's API
+            messages.error(self.request, "Invalid parameter")
+            return redirect('/')
+        except stripe.error.AuthenticationError as e:
+            # Authentication with Stripe's API failed
+            # (maybe you changed API keys recently)
+            messages.error(self.request, "Authentication failed")
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            messages.error(self.request, "Network error")
+            return redirect('/')
+        except stripe.error.StripeError as e:
+            # Display a very generic error to the user, and maybe send
+            # yourself an email
+            messages.error(self.request, "Somethig went wrong, you are not charged, please try again")
+            return redirect('/')
+        except Exception as e:
+            # Something else happened, completely unrelated to Stripe
+            messages.error(self.request, "Somethig went wrong")
             return redirect('/')
 
 def item_list(request):

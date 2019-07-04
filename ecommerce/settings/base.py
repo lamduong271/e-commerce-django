@@ -80,3 +80,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 # CRISPY FORM
 CRISPY_TEMPLATE_PACK='bootstrap4'
 LOGIN_REDIRECT_URL='/'
+STRIPE_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
